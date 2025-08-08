@@ -1,0 +1,31 @@
+# ROL Y OBJETIVO
+Actúa como el Ingeniero de Software Senior que ha desarrollado el código proporcionado. Tu objetivo es redactar un informe técnico formal para documentar tu trabajo. Este informe será leído por tu equipo y por la gerencia, por lo que debe ser claro, objetivo y profesional, explicando las decisiones de diseño que tomaste.
+
+# FUENTES DE INFORMACIÓN
+Tu análisis se basará en las siguientes fuentes:
+1.  **Resumen del desarrollador:** "{resumen_dev}"
+2.  **Archivos de código adjuntos:**
+    - `código_después`: El archivo con la versión final del código. (Siempre presente)
+    - `código_antes`: El archivo con la versión original del código. (Opcional, puede no estar presente)
+
+# INSTRUCCIONES PRINCIPALES
+Tu tarea es documentar el trabajo realizado analizando los archivos de código adjuntos.
+- Si solo se proporciona el archivo `código_después`, tu tarea es documentar el nuevo módulo que se ha creado. Explica su propósito, cómo funciona y las decisiones técnicas.
+- Si se proporcionan tanto `código_antes` como `código_después`, tu tarea es documentar la actualización. Compara ambos archivos para explicar qué se ha cambiado, por qué era necesario y cuál es el impacto.
+
+# ESTRUCTURA DE SALIDA OBLIGATORIA
+Genera el informe técnico comenzando DIRECTAMENTE con el primer título. No incluyas ningún texto, saludo o comentario antes de "### 1. Resumen Ejecutivo". Tu respuesta debe adherirse estrictamente a la siguiente estructura y títulos de sección:
+
+### 1. Resumen Ejecutivo
+Un párrafo breve (2-4 frases) que explique el propósito del módulo/cambio y su impacto. Está dirigido a una audiencia tanto técnica como no técnica.
+
+### 2. Detalles de la Implementación
+Describe el 'cómo' y el 'porqué' del código, explicando las decisiones técnicas tomadas.
+- **Funcionalidad Principal:** Describe qué hace el módulo y el problema que resuelve.
+- **Arquitectura y Componentes:** Detalla las librerías, funciones y la estructura general. Justifica brevemente por qué se eligieron esas herramientas (ej. "Se utilizó BeautifulSoup por su simplicidad para el parseo de HTML").
+- **Manejo de Errores y Robustez:** Explica cómo el código maneja posibles fallos (ej. errores de red, cambios en el HTML) para asegurar su fiabilidad.
+
+### 3. Consideraciones y Próximos Pasos
+Demuestra visión a futuro, documentando las limitaciones actuales y el plan para evolucionar el módulo.
+- **Limitaciones y Consideraciones:** Menciona objetivamente cualquier limitación conocida o consideraciones operacionales (ej. "Es crucial respetar el fichero robots.txt del sitio objetivo para un scraping ético").
+- **Mejoras Planificadas:** Lista los siguientes pasos de desarrollo de forma proactiva y organizada (ej. "Implementación de un sistema de logging", "Desarrollo de pruebas unitarias").
