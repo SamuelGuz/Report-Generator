@@ -38,29 +38,53 @@ def generate_content(prompt_filename, summary, code_before=None, code_after=None
     prompt_template = load_prompt_template(prompt_filename)
     if not prompt_template: return "Error: No se pudo cargar la plantilla."
     model = genai.GenerativeModel('gemini-1.5-flash-latest')
+
+    # Modo Texto (sin cambios)
     if code_after is not None:
+        st.info("🔄 Usando el modo de entrada de texto.")
         code_section = f"## Código ANTES:\n```\n{code_before}\n```\n\n## Código DESPUÉS:\n```\n{code_after}\n```" if code_before else f"## Código a Revisar:\n```\n{code_after}\n```"
         full_prompt = prompt_template.format(resumen_dev=summary, seccion_de_codigo=code_section)
         response = model.generate_content(full_prompt)
         return response.text
+
+    # Modo Archivo 
     elif uploaded_file_after is not None:
+        st.info("📂 Usando el modo de subida de archivos (ahorro de tokens).")
         prompt_parts = [prompt_template.format(resumen_dev=summary)]
+        
         def upload_to_gemini(uploaded_file, display_name):
-            if uploaded_file is None: return None
-            with tempfile.NamedTemporaryFile(delete=False, suffix=uploaded_file.name) as temp_file:
-                temp_file.write(uploaded_file.getvalue())
-                gemini_file = genai.upload_file(path=temp_file.name, display_name=display_name)
-                os.unlink(temp_file.name)
-            return gemini_file
+            if uploaded_file is None: 
+                return None
+            
+            temp_file_path = None
+            try:
+                with tempfile.NamedTemporaryFile(delete=False, suffix=uploaded_file.name) as temp_file:
+                    temp_file.write(uploaded_file.getvalue())
+                    temp_file_path = temp_file.name # Guardamos la ruta
+
+                gemini_file = genai.upload_file(path=temp_file_path, display_name=display_name)
+                return gemini_file
+
+            finally:
+                if temp_file_path and os.path.exists(temp_file_path):
+                    os.unlink(temp_file_path)
+        
         gemini_file_after = upload_to_gemini(uploaded_file_after, "código_después")
-        if gemini_file_after: prompt_parts.append(gemini_file_after)
-        else: return "Error: Fallo al subir el archivo 'después'."
+        if gemini_file_after: 
+            prompt_parts.append(gemini_file_after)
+        else: 
+            return "Error: Fallo al subir el archivo 'después'."
+
         if uploaded_file_before:
             gemini_file_before = upload_to_gemini(uploaded_file_before, "código_antes")
-            if gemini_file_before: prompt_parts.append(gemini_file_before)
+            if gemini_file_before: 
+                prompt_parts.append(gemini_file_before)
+        
         response = model.generate_content(prompt_parts)
         return response.text
-    else: return "Error: Se necesita proporcionar el 'Código DESPUÉS' para generar una respuesta."
+    
+    else:
+        return "Error: Se necesita proporcionar el 'Código DESPUÉS' para generar una respuesta."
 
 def get_commit_changes(repo_full_name, commit_sha):
     """Obtiene los archivos modificados de un commit específico comparándolo con su padre."""
